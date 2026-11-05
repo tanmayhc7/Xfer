@@ -41,8 +41,8 @@ extern int checksum(char *, int);
 extern void decode_command(char*);
 extern int checksum(char *, int);
 
-//Global variables
-int server_socket;
-sock_s server;
-int addr_length;
-int server_bytes;
+//Global variables (defined once in command_handler.c)
+extern int server_socket;
+extern sock_s server;
+extern int addr_length;
+extern int server_bytes;

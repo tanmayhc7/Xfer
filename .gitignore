@@ -1,0 +1,8 @@
+# Build output
+/Client/client
+/Server/server
+*.o
+*.dSYM/
+
+# Files created while testing transfers
+*.bak

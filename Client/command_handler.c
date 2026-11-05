@@ -1,5 +1,11 @@
 #include "command_handler.h"
 
+//Global variables declared extern in command_handler.h
+int server_socket;
+sock_s server;
+int addr_length;
+int server_bytes;
+
 /*
    It takes pointer to the payload and the length for checksum as input arguments.5
    This Function calculates checksum and returns an "int" checksum. It uses mod 100 checksum algorithm
@@ -200,8 +206,10 @@ void send_file(char * filename){
 			flag = 0;	
 		}			
 	}
-	//For last chunk of data remaining or the whole data
-	printf("Sending Packet Number %d\n",p.seq_no);
+	//For last chunk of data remaining or the whole data.
+	//Skip when the file is an exact multiple of the payload size: the loop above already sent everything.
+	bool send_tail = (rem > 0) || (file_size <= (long)sizeof(p.payload));
+	if(send_tail) printf("Sending Packet Number %d\n",p.seq_no);
 	fseek(fp,seek_pos,SEEK_SET);
 	if(last_packet){
 		fread(p.payload,1,rem,fp);
@@ -210,7 +218,7 @@ void send_file(char * filename){
 	}
 	p.checksum = checksum(p.payload,(file_size-seek_pos));
 	//resend till ack is received
-	while(!flag)
+	while(send_tail && !flag)
 	{
 		server_bytes = sendto(server_socket, (void *)&p, sizeof(p), 0, (struct sockaddr *)&server, addr_length);
 		bzero(ack__get,sizeof(ack__get));

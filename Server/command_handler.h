@@ -40,8 +40,8 @@ extern void delete_file(char *);
 extern int checksum(char *, int);
 extern void decode_command(char*);
 
-//Global variables
-int client_socket;
-sock_s client;
-int addr_length;
-int client_bytes;
+//Global variables (defined once in command_handler.c)
+extern int client_socket;
+extern sock_s client;
+extern int addr_length;
+extern int client_bytes;
